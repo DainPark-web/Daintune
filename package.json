@@ -1,0 +1,46 @@
+{
+  "name": "gmusic",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "./dist/index.js",
+  "bin": {
+    "gmusic": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsx src/index.tsx",
+    "build": "esbuild src/index.tsx --bundle --platform=node --format=esm --packages=external --outfile=dist/index.js --banner:js='#!/usr/bin/env node'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DainPark-web/Git_Music.git"
+  },
+  "keywords": [
+    "cli",
+    "youtube",
+    "music"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "bugs": {
+    "url": "https://github.com/DainPark-web/Git_Music/issues"
+  },
+  "homepage": "https://github.com/DainPark-web/Git_Music#readme",
+  "dependencies": {
+    "ink": "^6.8.0",
+    "react": "^19.2.4"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "esbuild": "^0.27.3",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
