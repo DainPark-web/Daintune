@@ -8,7 +8,7 @@ Built with [Ink](https://github.com/vadimdemedes/ink) (React for CLIs) and power
 
 ## Prerequisites
 
-daintune relies on two system tools that must be installed before use:
+daintune requires two system tools to be installed:
 
 ### macOS
 ```bash
@@ -34,6 +34,8 @@ Not currently supported (requires Unix socket support).
 npm install -g daintune
 ```
 
+All npm dependencies (including YouTube search) are installed automatically.
+
 ---
 
 ## Usage
@@ -50,6 +52,7 @@ daintune
 | `Enter`    | Confirm / Play |
 | `Esc`      | Go back        |
 | `Space`    | Pause / Resume |
+| `r`        | Restart track  |
 | `q`        | Quit           |
 
 ---
@@ -66,7 +69,7 @@ daintune
 ## Tech Stack
 
 - [Ink](https://github.com/vadimdemedes/ink) — React-based terminal UI
-- [ytsr](https://github.com/TimeForANinja/node-ytsr) — YouTube search
+- [yt-search](https://github.com/talmobi/yt-search) — YouTube search (installed automatically)
 - [mpv](https://mpv.io/) — Audio playback
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp) — YouTube stream extraction (used internally by mpv)
 
