@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
 import { Box, Text, useInput, useApp } from 'ink'
-import { Page } from '../types.js'
+import { Page, Track } from '../types.js'
 import Footer from '../components/Footer.js'
 import defaultInput from '../hooks/defaultInput.ts'
 import Header from '../components/Header.tsx'
+import MiniPlayer from '../components/MiniPlayer.js'
+import { PlaybackStatus } from '../hooks/usePlayback.js'
 
 interface Props {
   onNavigate: (page: Page) => void
+  miniPlayer: { activeTrack: Track | null; status: PlaybackStatus }
 }
 const MENU_ITEMS: { label: string; icon: string; page: Page | null }[] = [
   { label: 'Search',      icon: '/', page: 'search' },
@@ -16,13 +19,11 @@ const MENU_ITEMS: { label: string; icon: string; page: Page | null }[] = [
   { label: 'Quit',        icon: 'x', page: null },
 ]
 
-const MenuPage = ({ onNavigate }: Props) => {
+const MenuPage = ({ onNavigate, miniPlayer }: Props) => {
   const { exit } = useApp()
   const [selected, setSelected] = useState(0)
 
   defaultInput({ selected, setSelected, items: MENU_ITEMS, onNavigate, exit })
-
-
 
   return (
     <Box flexDirection="column" padding={1} gap={1}>
@@ -32,6 +33,7 @@ const MenuPage = ({ onNavigate }: Props) => {
         <MenuItems selected={selected} />
       </Box>
 
+      <MiniPlayer activeTrack={miniPlayer.activeTrack} status={miniPlayer.status} />
       <Footer description={`up/down navigate\nEnter select\n"q" quit`} />
     </Box>
   )

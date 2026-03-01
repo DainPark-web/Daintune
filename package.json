@@ -1,6 +1,6 @@
 {
   "name": "daintune",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "description": "",
   "type": "module",
   "main": "./dist/index.js",
@@ -14,7 +14,7 @@
     "dev": "tsx src/index.tsx",
     "build": "esbuild src/index.tsx --bundle --platform=node --format=esm --packages=external --outfile=dist/index.js --banner:js='#!/usr/bin/env node'",
     "test": "echo \"Error: no test specified\" && exit 1",
-     "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,6 @@
   },
   "keywords": [
     "cli",
-    "youtube",
     "music"
   ],
   "author": "Dain Park",

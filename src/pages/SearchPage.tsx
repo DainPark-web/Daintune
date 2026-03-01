@@ -6,17 +6,20 @@ import TextInput from "ink-text-input"
 import yts from "yt-search"
 import { Track } from "../types.js"
 import { Playlist } from "./LibraryPage.js"
+import MiniPlayer from "../components/MiniPlayer.js"
+import { PlaybackStatus } from "../hooks/usePlayback.js"
 
 interface Props {
   playlists: Playlist[]
   onAddToPlaylist: (track: Track, playlistIndex: number) => void
   onBack: () => void
   onPlay: (tracks: Track[], index: number) => void
+  miniPlayer: { activeTrack: Track | null; status: PlaybackStatus }
 }
 
 type Mode = 'input' | 'results' | 'addToPlaylist'
 
-const SearchPage = ({ playlists, onAddToPlaylist, onBack, onPlay }: Props) => {
+const SearchPage = ({ playlists, onAddToPlaylist, onBack, onPlay, miniPlayer }: Props) => {
   const [query, setQuery] = useState('')
   const [mode, setMode] = useState<Mode>('input')
   const [results, setResults] = useState<Track[]>([])
@@ -162,6 +165,7 @@ const SearchPage = ({ playlists, onAddToPlaylist, onBack, onPlay }: Props) => {
         )}
       </Box>
 
+      <MiniPlayer activeTrack={miniPlayer.activeTrack} status={miniPlayer.status} />
       <Footer description={footerText} />
     </Box>
   )

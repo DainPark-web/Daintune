@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import { Box, Text, useInput } from 'ink'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import MiniPlayer from '../components/MiniPlayer.js'
+import { PlaybackStatus } from '../hooks/usePlayback.js'
+import { Track } from '../types.js'
 
 export interface Setting {
   label: string
@@ -18,9 +21,10 @@ interface Props {
   settings: Setting[]
   onToggle: (index: number) => void
   onBack: () => void
+  miniPlayer: { activeTrack: Track | null; status: PlaybackStatus }
 }
 
-const SettingsPage = ({ settings, onToggle, onBack }: Props) => {
+const SettingsPage = ({ settings, onToggle, onBack, miniPlayer }: Props) => {
   const [selected, setSelected] = useState(0)
 
   useInput((_, key) => {
@@ -53,6 +57,7 @@ const SettingsPage = ({ settings, onToggle, onBack }: Props) => {
         })}
       </Box>
 
+      <MiniPlayer activeTrack={miniPlayer.activeTrack} status={miniPlayer.status} />
       <Footer description={`up/down navigate\nEnter toggle\n"Esc" back`} />
     </Box>
   )

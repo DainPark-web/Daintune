@@ -4,6 +4,8 @@ import { Track } from '../types.js'
 import Header from '../components/Header.js'
 import TextInput from 'ink-text-input'
 import Footer from '../components/Footer.js'
+import MiniPlayer from '../components/MiniPlayer.js'
+import { PlaybackStatus } from '../hooks/usePlayback.js'
 
 export interface Playlist {
   name: string
@@ -25,11 +27,12 @@ interface Props {
   initialPlaylistIndex: number
   initialMode: 'playlists' | 'tracks'
   onBack: () => void
+  miniPlayer: { activeTrack: Track | null; status: PlaybackStatus }
 }
 
 const fmt = (sec: number) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`
 
-const LibraryPage = ({ playlists, onAddPlaylist, onRemovePlaylist, onRemoveTrack, onPlayPlaylist, initialPlaylistIndex, initialMode, onBack }: Props) => {
+const LibraryPage = ({ playlists, onAddPlaylist, onRemovePlaylist, onRemoveTrack, onPlayPlaylist, initialPlaylistIndex, initialMode, onBack, miniPlayer }: Props) => {
   const [mode, setMode] = useState<'playlists' | 'tracks' | 'createPlaylist'>(initialMode)
   const [selectedPlaylist, setSelectedPlaylist] = useState(initialPlaylistIndex)
   const [selectedTrack, setSelectedTrack] = useState(0)
@@ -143,6 +146,7 @@ const LibraryPage = ({ playlists, onAddPlaylist, onRemovePlaylist, onRemoveTrack
         )}
       </Box>
 
+      <MiniPlayer activeTrack={miniPlayer.activeTrack} status={miniPlayer.status} />
       <Footer description={footerText} />
     </Box>
   )
