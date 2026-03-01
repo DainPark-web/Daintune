@@ -1,5 +1,12 @@
-# Daintune
+```
+ ____        _       _
+|  _ \  __ _(_)_ __ | |_ _   _ _ __   ___
+| | | |/ _` | | '_ \| __| | | | '_ \ / _ \
+| |_| | (_| | | | | | |_| |_| | | | |  __/
+|____/ \__,_|_|_| |_|\__|\__,_|_| |_|\___|
+```
 
+![preview](./assets/p1.png)
 
 A terminal-based YouTube music player. Search, organize, and play music directly from your command line — no browser needed.
 
