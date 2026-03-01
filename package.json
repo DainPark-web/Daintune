@@ -1,6 +1,6 @@
 {
   "name": "daintune",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "",
   "type": "module",
   "main": "./dist/index.js",
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DainPark-web/Git_Music.git"
+    "url": "git+https://github.com/DainPark-web/daintune.git"
   },
   "keywords": [
     "cli",
@@ -31,9 +31,9 @@
     "node": ">=18"
   },
   "bugs": {
-    "url": "https://github.com/DainPark-web/Git_Music/issues"
+    "url": "https://github.com/DainPark-web/daintune/issues"
   },
-  "homepage": "https://github.com/DainPark-web/Git_Music#readme",
+  "homepage": "https://github.com/DainPark-web/daintune#readme",
   "dependencies": {
     "ink": "^6.8.0",
     "ink-text-input": "^6.0.0",
