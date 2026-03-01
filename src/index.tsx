@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { render } from 'ink'
 import MenuPage from './pages/MenuPage.js'
 import { Page, Track } from './types.js'
@@ -6,12 +6,16 @@ import SearchPage from './pages/SearchPage.js'
 import LibraryPage, { INITIAL_PLAYLISTS, Playlist } from './pages/LibraryPage.js'
 import NowPlayingPage from './pages/NowPlayingPage.js'
 import SettingsPage, { INITIAL_SETTINGS } from './pages/SettingsPage.js'
+import { loadPlaylists, savePlaylists, loadSettings, saveSettings } from './storage.js'
 
 const App = () => {
   const [page, setPage] = useState<Page>('menu')
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null)
-  const [settings, setSettings] = useState(INITIAL_SETTINGS)
-  const [playlists, setPlaylists] = useState<Playlist[]>(INITIAL_PLAYLISTS)
+  const [settings, setSettings] = useState(loadSettings() ?? INITIAL_SETTINGS)
+  const [playlists, setPlaylists] = useState<Playlist[]>(loadPlaylists() ?? INITIAL_PLAYLISTS)
+
+  useEffect(() => { savePlaylists(playlists) }, [playlists])
+  useEffect(() => { saveSettings(settings) }, [settings])
 
   // queue: 라이브러리에서 재생할 때 설정됨 (search는 빈 배열)
   const [queue, setQueue] = useState<Track[]>([])
