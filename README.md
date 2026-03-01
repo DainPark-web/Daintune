@@ -112,4 +112,6 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) before
 
 ## License
 
-MIT © Dain Park — see [LICENSE](LICENSE) for details.
+MIT + Commons Clause © Dain Park — see [LICENSE](LICENSE) for details.
+
+Free for personal and educational use. Commercial use, resale, or monetization is not permitted.
