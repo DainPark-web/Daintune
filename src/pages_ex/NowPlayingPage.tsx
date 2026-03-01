@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Box, Text, useInput } from 'ink'
 import { Track } from '../types.js'
 import { startPlayback, stopPlayback, pausePlayback, resumePlayback } from '../player.js'
-
+import Header from '../components/Header.js'
 interface Props {
   track: Track | null
   onBack: () => void
@@ -92,10 +92,8 @@ const NowPlayingPage = ({ track, onBack }: Props) => {
 
   return (
     <Box flexDirection="column" padding={1} gap={1}>
-      <Box gap={1}>
-        <Text color="green" bold>gmusic</Text>
-        <Text color="gray">/ Now Playing</Text>
-      </Box>
+      <Header description="Now playing" />
+     
 
       <Box
         flexDirection="column"

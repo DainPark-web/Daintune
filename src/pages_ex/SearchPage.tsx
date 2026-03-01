@@ -79,7 +79,7 @@ const SearchPage = ({ onBack, onPlay }: Props) => {
 
   return (
     <Box flexDirection="column" padding={1} gap={1}>
-      <Header />
+      <Header description="Search for YouTube music" />
 
       <Box flexDirection="column" borderStyle="round" borderColor="green" paddingX={1} gap={1}>
         {mode === 'input' ? (

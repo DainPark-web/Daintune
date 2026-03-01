@@ -2,7 +2,7 @@ import { spawn, ChildProcess } from 'child_process'
 import * as net from 'net'
 import * as fs from 'fs'
 
-const SOCKET_PATH = '/tmp/gmusic-mpv.sock'
+const SOCKET_PATH = '/tmp/daintune-mpv.sock'
 
 let mpvProcess: ChildProcess | null = null
 let ipcSocket: net.Socket | null = null
