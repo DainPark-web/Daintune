@@ -1,5 +1,7 @@
 # Daintune
 
+-
+
 A terminal-based YouTube music player. Search, organize, and play music directly from your command line — no browser needed.
 
 Built with [Ink](https://github.com/vadimdemedes/ink) (React for CLIs) and powered by `mpv`.
