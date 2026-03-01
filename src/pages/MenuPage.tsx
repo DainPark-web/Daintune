@@ -12,11 +12,11 @@ interface Props {
   miniPlayer: { activeTrack: Track | null; status: PlaybackStatus }
 }
 const MENU_ITEMS: { label: string; icon: string; page: Page | null }[] = [
-  { label: 'Search',      icon: '/', page: 'search' },
-  { label: 'Library',     icon: '#', page: 'library' },
-  { label: 'Now Playing', icon: '>', page: 'nowPlaying' },
-  { label: 'Settings',    icon: '*', page: 'settings' },
-  { label: 'Quit',        icon: 'x', page: null },
+  { label: 'Search',      icon: '🔍', page: 'search' },
+  { label: 'Library',     icon: '📚', page: 'library' },
+  { label: 'Now Playing', icon: '🎵', page: 'nowPlaying' },
+  { label: 'Settings',    icon: '⚙️', page: 'settings' },
+  { label: 'Quit',        icon: '❌', page: null },
 ]
 
 const MenuPage = ({ onNavigate, miniPlayer }: Props) => {
@@ -27,7 +27,7 @@ const MenuPage = ({ onNavigate, miniPlayer }: Props) => {
 
   return (
     <Box flexDirection="column" padding={1} gap={1}>
-      <Header description="Choose an option" />
+      <Header description="Choose an option" showLogo />
 
       <Box flexDirection="column" borderStyle="round" borderColor="green" paddingX={1} paddingY={1}>
         <MenuItems selected={selected} />
