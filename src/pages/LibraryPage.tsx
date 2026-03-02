@@ -5,7 +5,9 @@ import Header from '../components/Header.js'
 import TextInput from 'ink-text-input'
 import Footer from '../components/Footer.js'
 import MiniPlayer from '../components/MiniPlayer.js'
+import MiniTimer from '../components/MiniTimer.js'
 import { PlaybackStatus } from '../hooks/usePlayback.js'
+import { PomodoroStatus } from '../hooks/usePomodoro.js'
 
 export interface Playlist {
   name: string
@@ -28,11 +30,12 @@ interface Props {
   initialMode: 'playlists' | 'tracks'
   onBack: () => void
   miniPlayer: { activeTrack: Track | null; status: PlaybackStatus }
+  miniTimer: { timeLeft: number; status: PomodoroStatus }
 }
 
 const fmt = (sec: number) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`
 
-const LibraryPage = ({ playlists, onAddPlaylist, onRemovePlaylist, onRemoveTrack, onPlayPlaylist, initialPlaylistIndex, initialMode, onBack, miniPlayer }: Props) => {
+const LibraryPage = ({ playlists, onAddPlaylist, onRemovePlaylist, onRemoveTrack, onPlayPlaylist, initialPlaylistIndex, initialMode, onBack, miniPlayer, miniTimer }: Props) => {
   const [mode, setMode] = useState<'playlists' | 'tracks' | 'createPlaylist'>(initialMode)
   const [selectedPlaylist, setSelectedPlaylist] = useState(initialPlaylistIndex)
   const [selectedTrack, setSelectedTrack] = useState(0)
@@ -43,10 +46,13 @@ const LibraryPage = ({ playlists, onAddPlaylist, onRemovePlaylist, onRemoveTrack
   const playlist = playlists[selectedPlaylist]
 
   // 터미널 높이 기반 가시 트랙 수 계산
-  // 고정 오버헤드: 외부 padding(2) + gap들(3) + header(2) + 리스트 border+padding(4) + miniPlayer(3) + footer(1) ≈ 15
+  // 기본 고정 오버헤드: 외부 padding(2) + gap들(2) + header(2) + 리스트 border+paddingY(4) + footer(1) + 버퍼(3) = 14
+  // MiniPlayer/MiniTimer는 각 content(3) + gap(1) = 4줄씩 조건부 추가
   // gap={1}으로 인해 각 아이템이 2줄 차지
   const termRows = process.stdout.rows || 24
-  const visibleCount = Math.min(8, Math.max(3, Math.floor((termRows - 18) / 2)))
+  const miniPlayerRows = (miniPlayer.status !== 'idle' && miniPlayer.activeTrack) ? 4 : 0
+  const miniTimerRows  = miniTimer.status !== 'idle' ? 4 : 0
+  const visibleCount = Math.min(8, Math.max(2, Math.floor((termRows - 14 - miniPlayerRows - miniTimerRows) / 2)))
 
   useEffect(() => {
     if (selectedTrack < scrollOffset) {
@@ -175,6 +181,7 @@ const LibraryPage = ({ playlists, onAddPlaylist, onRemovePlaylist, onRemoveTrack
       </Box>
 
       <MiniPlayer activeTrack={miniPlayer.activeTrack} status={miniPlayer.status} />
+      <MiniTimer timeLeft={miniTimer.timeLeft} status={miniTimer.status} />
       <Footer description={footerText} />
     </Box>
   )
