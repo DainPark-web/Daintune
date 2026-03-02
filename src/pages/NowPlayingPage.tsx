@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 import { Box, Text, useInput } from 'ink'
 import { Track } from '../types.js'
 import Header from '../components/Header.js'
+import MiniTimer from '../components/MiniTimer.js'
 import { Playlist } from './LibraryPage.js'
 import { PlaybackState, PlaybackActions } from '../hooks/usePlayback.js'
+import { PomodoroStatus } from '../hooks/usePomodoro.js'
 
 interface Props {
   playbackState: PlaybackState
@@ -14,6 +16,7 @@ interface Props {
   playlists: Playlist[]
   onAddToPlaylist: (track: Track, playlistIndex: number) => void
   onBack: () => void
+  miniTimer: { timeLeft: number; status: PomodoroStatus }
 }
 
 const fmt = (sec: number) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`
@@ -33,6 +36,7 @@ const NowPlayingPage = ({
   playlists,
   onAddToPlaylist,
   onBack,
+  miniTimer,
 }: Props) => {
   const { activeTrack, nextTrack, status, progress, error, queue } = playbackState
   const [showPicker, setShowPicker] = useState(false)
@@ -158,6 +162,7 @@ const NowPlayingPage = ({
         </Box>
       </Box>
 
+      <MiniTimer timeLeft={miniTimer.timeLeft} status={miniTimer.status} />
       <Text color="gray">
         {showPicker
           ? `up/down navigate  Enter add  Esc cancel`

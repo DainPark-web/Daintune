@@ -1,4 +1,4 @@
-export type Page = 'menu' | 'search' | 'library' | 'nowPlaying' | 'settings'
+export type Page = 'menu' | 'search' | 'library' | 'nowPlaying' | 'settings' | 'pomodoro'
 
 export interface Track {
   title: string

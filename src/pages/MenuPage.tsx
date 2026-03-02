@@ -5,21 +5,25 @@ import Footer from '../components/Footer.js'
 import defaultInput from '../hooks/defaultInput.ts'
 import Header from '../components/Header.tsx'
 import MiniPlayer from '../components/MiniPlayer.js'
+import MiniTimer from '../components/MiniTimer.js'
 import { PlaybackStatus } from '../hooks/usePlayback.js'
+import { PomodoroStatus } from '../hooks/usePomodoro.js'
 
 interface Props {
   onNavigate: (page: Page) => void
   miniPlayer: { activeTrack: Track | null; status: PlaybackStatus }
+  miniTimer: { timeLeft: number; status: PomodoroStatus }
 }
 const MENU_ITEMS: { label: string; icon: string; page: Page | null }[] = [
   { label: 'Search',      icon: '🔍', page: 'search' },
   { label: 'Library',     icon: '📚', page: 'library' },
   { label: 'Now Playing', icon: '🎵', page: 'nowPlaying' },
+  { label: 'Pomodoro',    icon: '⏱',  page: 'pomodoro' },
   { label: 'Settings',    icon: '⚙️', page: 'settings' },
   { label: 'Quit',        icon: '❌', page: null },
 ]
 
-const MenuPage = ({ onNavigate, miniPlayer }: Props) => {
+const MenuPage = ({ onNavigate, miniPlayer, miniTimer }: Props) => {
   const { exit } = useApp()
   const [selected, setSelected] = useState(0)
 
@@ -34,6 +38,7 @@ const MenuPage = ({ onNavigate, miniPlayer }: Props) => {
       </Box>
 
       <MiniPlayer activeTrack={miniPlayer.activeTrack} status={miniPlayer.status} />
+      <MiniTimer timeLeft={miniTimer.timeLeft} status={miniTimer.status} />
       <Footer description={`up/down navigate\nEnter select\n"q" quit`} />
     </Box>
   )
