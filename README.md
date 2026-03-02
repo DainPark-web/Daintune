@@ -38,11 +38,27 @@ Not currently supported (requires Unix socket support).
 
 ## Installation
 
+### ~~npm (Deprecated)~~
+
+> ⚠️ **npm public distribution has been discontinued.**
+>
+> This project relies on [`yt-dlp`](https://github.com/yt-dlp/yt-dlp) and [`yt-search`](https://github.com/talmobi/yt-search), which interact with YouTube outside of its official API. Out of caution regarding YouTube's Terms of Service, Daintune is no longer distributed via npm.
+>
+> ~~`npm install -g daintune`~~
+
+### Local (Recommended)
+
+Clone the repo and link it locally:
+
 ```bash
-npm install -g daintune
+git clone https://github.com/dain-p/Daintune.git
+cd Daintune
+npm install
+npm run build
+npm link
 ```
 
-All npm dependencies are installed automatically.
+This creates a global `daintune` command on your machine only — nothing is published or shared.
 
 ---
 
