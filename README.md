@@ -10,7 +10,7 @@
 
 > A terminal-based music player. Search, organize, and play music directly from your command line — no browser needed.
 
-![version](https://img.shields.io/badge/version-2.2.0-blue)
+![version](https://img.shields.io/badge/version-2.2.1-blue)
 ![node](https://img.shields.io/badge/node-%3E%3D18-green)
 ![license](https://img.shields.io/badge/license-MIT%20%2B%20Commons%20Clause-lightgrey)
 
