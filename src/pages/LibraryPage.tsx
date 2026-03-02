@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Box, Text, useInput } from 'ink'
 import { Track } from '../types.js'
 import Header from '../components/Header.js'
@@ -38,8 +38,23 @@ const LibraryPage = ({ playlists, onAddPlaylist, onRemovePlaylist, onRemoveTrack
   const [selectedTrack, setSelectedTrack] = useState(0)
   const [playlistName, setPlaylistName] = useState('')
   const [confirmDelete, setConfirmDelete] = useState<false | 'track' | 'playlist'>(false)
+  const [scrollOffset, setScrollOffset] = useState(0)
 
   const playlist = playlists[selectedPlaylist]
+
+  // 터미널 높이 기반 가시 트랙 수 계산
+  // 고정 오버헤드: 외부 padding(2) + gap들(3) + header(2) + 리스트 border+padding(4) + miniPlayer(3) + footer(1) ≈ 15
+  // gap={1}으로 인해 각 아이템이 2줄 차지
+  const termRows = process.stdout.rows || 24
+  const visibleCount = Math.min(8, Math.max(3, Math.floor((termRows - 18) / 2)))
+
+  useEffect(() => {
+    if (selectedTrack < scrollOffset) {
+      setScrollOffset(selectedTrack)
+    } else if (selectedTrack >= scrollOffset + visibleCount) {
+      setScrollOffset(selectedTrack - visibleCount + 1)
+    }
+  }, [selectedTrack, visibleCount])
 
   useInput((input, key) => {
     if (mode === 'createPlaylist') {
@@ -73,7 +88,7 @@ const LibraryPage = ({ playlists, onAddPlaylist, onRemovePlaylist, onRemoveTrack
     if (mode === 'playlists') {
       if (key.upArrow)   setSelectedPlaylist(prev => (prev - 1 + playlists.length) % playlists.length)
       if (key.downArrow) setSelectedPlaylist(prev => (prev + 1) % playlists.length)
-      if (key.return)    { setMode('tracks'); setSelectedTrack(0) }
+      if (key.return)    { setMode('tracks'); setSelectedTrack(0); setScrollOffset(0) }
       if (key.escape)    onBack()
       if (input === 'c') setMode('createPlaylist')
       if (input === 'r') setConfirmDelete('playlist')
@@ -87,7 +102,7 @@ const LibraryPage = ({ playlists, onAddPlaylist, onRemovePlaylist, onRemoveTrack
         if (key.return)    onPlayPlaylist(playlist.tracks, selectedTrack, selectedPlaylist)
         if (input === 'r') setConfirmDelete('track')
       }
-      if (key.escape) { setMode('playlists'); setSelectedTrack(0) }
+      if (key.escape) { setMode('playlists'); setSelectedTrack(0); setScrollOffset(0) }
     }
   })
 
@@ -117,16 +132,29 @@ const LibraryPage = ({ playlists, onAddPlaylist, onRemovePlaylist, onRemoveTrack
         {mode === 'tracks' && (
           playlist.tracks.length === 0
             ? <Text color="gray">  No tracks yet. Search for songs and add them here.</Text>
-            : playlist.tracks.map((track, i) => (
-                <Box key={i}>
-                  <Text
-                    color={i === selectedTrack ? 'black' : 'white'}
-                    backgroundColor={i === selectedTrack ? 'green' : undefined}
-                  >
-                    {` [>] ${track.title.padEnd(24)} ${track.artist.padEnd(18)} ${fmt(track.duration)}`}
-                  </Text>
-                </Box>
-              ))
+            : (
+              <>
+                {scrollOffset > 0 && (
+                  <Text color="gray">  ↑ {scrollOffset} more above</Text>
+                )}
+                {playlist.tracks.slice(scrollOffset, scrollOffset + visibleCount).map((track, vi) => {
+                  const i = scrollOffset + vi
+                  return (
+                    <Box key={i}>
+                      <Text
+                        color={i === selectedTrack ? 'black' : 'white'}
+                        backgroundColor={i === selectedTrack ? 'green' : undefined}
+                      >
+                        {` [>] ${track.title.padEnd(24)} ${track.artist.padEnd(18)} ${fmt(track.duration)}`}
+                      </Text>
+                    </Box>
+                  )
+                })}
+                {scrollOffset + visibleCount < playlist.tracks.length && (
+                  <Text color="gray">  ↓ {playlist.tracks.length - scrollOffset - visibleCount} more below</Text>
+                )}
+              </>
+            )
         )}
 
         {mode === 'createPlaylist' && (
