@@ -1,5 +1,5 @@
 import { Box, Text, useInput } from "ink"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Header from "../components/Header.js"
 import Footer from "../components/Footer.js"
 import TextInput from "ink-text-input"
@@ -7,7 +7,9 @@ import yts from "yt-search"
 import { Track } from "../types.js"
 import { Playlist } from "./LibraryPage.js"
 import MiniPlayer from "../components/MiniPlayer.js"
+import MiniTimer from "../components/MiniTimer.js"
 import { PlaybackStatus } from "../hooks/usePlayback.js"
+import { PomodoroStatus } from "../hooks/usePomodoro.js"
 
 interface Props {
   playlists: Playlist[]
@@ -15,11 +17,12 @@ interface Props {
   onBack: () => void
   onPlay: (tracks: Track[], index: number) => void
   miniPlayer: { activeTrack: Track | null; status: PlaybackStatus }
+  miniTimer: { timeLeft: number; status: PomodoroStatus }
 }
 
 type Mode = 'input' | 'results' | 'addToPlaylist'
 
-const SearchPage = ({ playlists, onAddToPlaylist, onBack, onPlay, miniPlayer }: Props) => {
+const SearchPage = ({ playlists, onAddToPlaylist, onBack, onPlay, miniPlayer, miniTimer }: Props) => {
   const [query, setQuery] = useState('')
   const [mode, setMode] = useState<Mode>('input')
   const [results, setResults] = useState<Track[]>([])
@@ -28,6 +31,21 @@ const SearchPage = ({ playlists, onAddToPlaylist, onBack, onPlay, miniPlayer }: 
   const [error, setError] = useState<string | null>(null)
   const [selectedPlaylistForAdd, setSelectedPlaylistForAdd] = useState(0)
   const [addResult, setAddResult] = useState<{ type: 'added' | 'duplicate'; name: string } | null>(null)
+  const [scrollOffset, setScrollOffset] = useState(0)
+
+  const termRows = process.stdout.rows || 24
+  const miniPlayerRows = (miniPlayer.status !== 'idle' && miniPlayer.activeTrack) ? 4 : 0
+  const miniTimerRows  = miniTimer.status !== 'idle' ? 4 : 0
+  // 기본 오버헤드: outer padding(2) + header(2) + gap(1) + list border(2) + query row+gap(2) + footer(1) + buffer(3) = 13
+  const visibleCount = Math.min(results.length, Math.max(3, Math.floor((termRows - 13 - miniPlayerRows - miniTimerRows) / 2)))
+
+  useEffect(() => {
+    if (selected < scrollOffset) {
+      setScrollOffset(selected)
+    } else if (selected >= scrollOffset + visibleCount) {
+      setScrollOffset(selected - visibleCount + 1)
+    }
+  }, [selected, visibleCount])
 
   const runSearch = async (q: string) => {
     if (!q.trim()) return
@@ -44,6 +62,7 @@ const SearchPage = ({ playlists, onAddToPlaylist, onBack, onPlay, miniPlayer }: 
       }))
       setResults(tracks)
       setSelected(0)
+      setScrollOffset(0)
       setMode('results')
     } catch (e: any) {
       setError(e.message ?? 'Search failed')
@@ -128,18 +147,31 @@ const SearchPage = ({ playlists, onAddToPlaylist, onBack, onPlay, miniPlayer }: 
           <Text color="gray">No results found.</Text>
         )}
 
-        {(mode === 'results' || mode === 'addToPlaylist') && results.map((track, i) => (
-          <Box key={track.youtubeId ?? i} gap={1}>
-            <Text color={i === selected ? 'green' : 'gray'}>
-              {i === selected ? '>' : ' '}
-            </Text>
-            <Text color={i === selected && mode === 'results' ? 'white' : 'gray'} bold={i === selected && mode === 'results'}>
-              {track.title.length > 40 ? track.title.slice(0, 37) + '...' : track.title}
-            </Text>
-            <Text color="gray">{track.artist}</Text>
-            <Text color="gray">{formatDuration(track.duration)}</Text>
-          </Box>
-        ))}
+        {(mode === 'results' || mode === 'addToPlaylist') && (
+          <>
+            {scrollOffset > 0 && (
+              <Text color="gray">  ↑ {scrollOffset} more above</Text>
+            )}
+            {results.slice(scrollOffset, scrollOffset + visibleCount).map((track, vi) => {
+              const i = scrollOffset + vi
+              return (
+                <Box key={track.youtubeId ?? i} gap={1}>
+                  <Text color={i === selected ? 'green' : 'gray'}>
+                    {i === selected ? '>' : ' '}
+                  </Text>
+                  <Text color={i === selected && mode === 'results' ? 'white' : 'gray'} bold={i === selected && mode === 'results'}>
+                    {track.title.length > 40 ? track.title.slice(0, 37) + '...' : track.title}
+                  </Text>
+                  <Text color="gray">{track.artist}</Text>
+                  <Text color="gray">{formatDuration(track.duration)}</Text>
+                </Box>
+              )
+            })}
+            {scrollOffset + visibleCount < results.length && (
+              <Text color="gray">  ↓ {results.length - scrollOffset - visibleCount} more below</Text>
+            )}
+          </>
+        )}
 
         {addResult && mode === 'results' && (
           <Text color={addResult.type === 'added' ? 'green' : 'yellow'}>
@@ -166,6 +198,7 @@ const SearchPage = ({ playlists, onAddToPlaylist, onBack, onPlay, miniPlayer }: 
       </Box>
 
       <MiniPlayer activeTrack={miniPlayer.activeTrack} status={miniPlayer.status} />
+      <MiniTimer timeLeft={miniTimer.timeLeft} status={miniTimer.status} />
       <Footer description={footerText} />
     </Box>
   )

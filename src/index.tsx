@@ -6,9 +6,12 @@ import SearchPage from './pages/SearchPage.js'
 import LibraryPage, { INITIAL_PLAYLISTS, Playlist } from './pages/LibraryPage.js'
 import NowPlayingPage from './pages/NowPlayingPage.js'
 import SettingsPage, { INITIAL_SETTINGS } from './pages/SettingsPage.js'
+import PomodoroPage from './pages/PomodoroPage.js'
 import { loadPlaylists, savePlaylists, loadSettings, saveSettings } from './storage.js'
 import { usePlayback } from './hooks/usePlayback.js'
+import { usePomodoro } from './hooks/usePomodoro.js'
 import { stopPlayback } from './player.js'
+import { playTune, stopTune } from './tune.js'
 
 const App = () => {
   const [page, setPage] = useState<Page>('menu')
@@ -17,7 +20,7 @@ const App = () => {
 
   useEffect(() => { savePlaylists(playlists) }, [playlists])
   useEffect(() => { saveSettings(settings) }, [settings])
-  useEffect(() => () => stopPlayback(), [])
+  useEffect(() => () => { stopPlayback(); stopTune() }, [])
 
   // 라이브러리에서 왔을 때 복귀 정보
   const [fromLibrary, setFromLibrary] = useState(false)
@@ -28,11 +31,27 @@ const App = () => {
   const autoplayNext = settings.find(s => s.label === 'Autoplay next track')?.value ?? false
 
   const playback = usePlayback({ repeat, shuffle, autoplayNext })
+  const pomodoro = usePomodoro()
 
   const miniPlayer = {
     activeTrack: playback.state.activeTrack,
     status: playback.state.status,
   }
+
+  const miniTimer = {
+    timeLeft: pomodoro.state.timeLeft,
+    status: pomodoro.state.status,
+  }
+
+  useEffect(() => {
+    if (pomodoro.state.status === 'done') {
+      playback.actions.stop()
+      playTune()
+      setPage('pomodoro')
+    } else if (pomodoro.state.status === 'idle') {
+      stopTune()
+    }
+  }, [pomodoro.state.status])
 
   // search 결과 전체를 큐로 재생
   const handlePlay = (tracks: Track[], index: number) => {
@@ -73,16 +92,17 @@ const App = () => {
       i === playlistIndex ? { ...pl, tracks: [...pl.tracks, track] } : pl
     ))
 
-  if (page === 'menu')       return <MenuPage miniPlayer={miniPlayer} onNavigate={(p) => {
+  if (page === 'menu')       return <MenuPage miniPlayer={miniPlayer} miniTimer={miniTimer} onNavigate={(p) => {
     if (p === 'library') { setFromLibrary(false); setLibPlaylistIndex(0) }
     setPage(p)
   }} />
-  if (page === 'search')     return <SearchPage miniPlayer={miniPlayer} playlists={playlists} onAddToPlaylist={handleAddToPlaylist} onBack={() => setPage('menu')} onPlay={handlePlay} />
-  if (page === 'library')    return <LibraryPage miniPlayer={miniPlayer} playlists={playlists} onAddPlaylist={handleAddPlaylist} onRemovePlaylist={handleRemovePlaylist} onRemoveTrack={handleRemoveTrack} onPlayPlaylist={handlePlayPlaylist} initialPlaylistIndex={libPlaylistIndex} initialMode={fromLibrary ? 'tracks' : 'playlists'} onBack={() => { setFromLibrary(false); setPage('menu') }} />
-  if (page === 'nowPlaying') return <NowPlayingPage playbackState={playback.state} playbackActions={playback.actions} repeat={repeat} shuffle={shuffle} autoplayNext={autoplayNext} playlists={playlists} onAddToPlaylist={handleAddToPlaylist} onBack={handleNowPlayingBack} />
-  if (page === 'settings')   return <SettingsPage miniPlayer={miniPlayer} settings={settings} onToggle={i => setSettings(prev => prev.map((s, idx) => idx === i ? { ...s, value: !s.value } : s))} onBack={() => setPage('menu')} />
+  if (page === 'search')     return <SearchPage miniPlayer={miniPlayer} miniTimer={miniTimer} playlists={playlists} onAddToPlaylist={handleAddToPlaylist} onBack={() => setPage('menu')} onPlay={handlePlay} />
+  if (page === 'library')    return <LibraryPage miniPlayer={miniPlayer} miniTimer={miniTimer} playlists={playlists} onAddPlaylist={handleAddPlaylist} onRemovePlaylist={handleRemovePlaylist} onRemoveTrack={handleRemoveTrack} onPlayPlaylist={handlePlayPlaylist} initialPlaylistIndex={libPlaylistIndex} initialMode={fromLibrary ? 'tracks' : 'playlists'} onBack={() => { setFromLibrary(false); setPage('menu') }} />
+  if (page === 'nowPlaying') return <NowPlayingPage playbackState={playback.state} playbackActions={playback.actions} repeat={repeat} shuffle={shuffle} autoplayNext={autoplayNext} playlists={playlists} onAddToPlaylist={handleAddToPlaylist} onBack={handleNowPlayingBack} miniTimer={miniTimer} />
+  if (page === 'settings')   return <SettingsPage miniPlayer={miniPlayer} miniTimer={miniTimer} settings={settings} onToggle={i => setSettings(prev => prev.map((s, idx) => idx === i ? { ...s, value: !s.value } : s))} onBack={() => setPage('menu')} />
+  if (page === 'pomodoro')   return <PomodoroPage pomodoroState={pomodoro.state} pomodoroActions={pomodoro.actions} miniPlayer={miniPlayer} onBack={() => setPage('menu')} />
 
-  return <MenuPage miniPlayer={miniPlayer} onNavigate={setPage} />
+  return <MenuPage miniPlayer={miniPlayer} miniTimer={miniTimer} onNavigate={setPage} />
 }
 
 render(<App />)

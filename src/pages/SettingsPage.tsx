@@ -3,7 +3,9 @@ import { Box, Text, useInput } from 'ink'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import MiniPlayer from '../components/MiniPlayer.js'
+import MiniTimer from '../components/MiniTimer.js'
 import { PlaybackStatus } from '../hooks/usePlayback.js'
+import { PomodoroStatus } from '../hooks/usePomodoro.js'
 import { Track } from '../types.js'
 
 export interface Setting {
@@ -22,9 +24,10 @@ interface Props {
   onToggle: (index: number) => void
   onBack: () => void
   miniPlayer: { activeTrack: Track | null; status: PlaybackStatus }
+  miniTimer: { timeLeft: number; status: PomodoroStatus }
 }
 
-const SettingsPage = ({ settings, onToggle, onBack, miniPlayer }: Props) => {
+const SettingsPage = ({ settings, onToggle, onBack, miniPlayer, miniTimer }: Props) => {
   const [selected, setSelected] = useState(0)
 
   useInput((_, key) => {
@@ -58,6 +61,7 @@ const SettingsPage = ({ settings, onToggle, onBack, miniPlayer }: Props) => {
       </Box>
 
       <MiniPlayer activeTrack={miniPlayer.activeTrack} status={miniPlayer.status} />
+      <MiniTimer timeLeft={miniTimer.timeLeft} status={miniTimer.status} />
       <Footer description={`up/down navigate\nEnter toggle\n"Esc" back`} />
     </Box>
   )
