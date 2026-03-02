@@ -8,47 +8,39 @@
 
 ![preview](./assets/p1.png)
 
-A terminal-based music player. Search, organize, and play music directly from your command line — no browser needed.
+> A terminal-based music player. Search, organize, and play music directly from your command line — no browser needed.
 
-Built with [Ink](https://github.com/vadimdemedes/ink) (React for CLIs) and powered by `mpv`.
+![version](https://img.shields.io/badge/version-2.2.0-blue)
+![node](https://img.shields.io/badge/node-%3E%3D18-green)
+![license](https://img.shields.io/badge/license-MIT%20%2B%20Commons%20Clause-lightgrey)
 
 ---
 
 ## Prerequisites
 
-Daintune requires two system tools:
+Requires `mpv` and `yt-dlp` on your system.
 
-### macOS
+**macOS**
 ```bash
 brew install mpv yt-dlp
 ```
 
-### Ubuntu / Debian
+**Ubuntu / Debian**
 ```bash
 sudo apt install mpv
 sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp
 sudo chmod a+rx /usr/local/bin/yt-dlp
 ```
 
-### Windows
-
-Not currently supported (requires Unix socket support).
+**Windows** — Not currently supported (requires Unix socket support).
 
 ---
 
 ## Installation
 
-### ~~npm (Deprecated)~~
+> **Note:** npm distribution has been discontinued due to YouTube ToS concerns around `yt-dlp` and `yt-search`.
 
-> ⚠️ **npm public distribution has been discontinued.**
->
-> This project relies on [`yt-dlp`](https://github.com/yt-dlp/yt-dlp) and [`yt-search`](https://github.com/talmobi/yt-search), which interact with YouTube outside of its official API. Out of caution regarding YouTube's Terms of Service, Daintune is no longer distributed via npm.
->
-> ~~`npm install -g daintune`~~
-
-### Local (Recommended)
-
-Clone the repo and link it locally:
+Clone and link locally:
 
 ```bash
 git clone https://github.com/dain-p/Daintune.git
@@ -72,58 +64,57 @@ daintune
 
 ## Features
 
-- **Search** — Search YouTube and play audio instantly
-- **Library** — Organize tracks into playlists; create, delete, and manage them
-- **Queue** — Search results and playlists play as a continuous queue
-- **Settings** — Toggle Repeat, Shuffle, and Autoplay Next per session
+| | Feature | Description |
+|---|---|---|
+| 🔍 | **Search** | Search YouTube and play audio instantly |
+| 📚 | **Library** | Organize tracks into playlists |
+| 📋 | **Queue** | Search results and playlists play as a continuous queue |
+| ⚙️ | **Settings** | Toggle Repeat, Shuffle, and Autoplay Next |
 
 ---
 
 ## Keybindings
 
-### General
+**General**
 
-| Key        | Action              |
-|------------|---------------------|
-| `↑` / `↓` | Move selection      |
-| `Enter`    | Confirm / Play      |
-| `Esc`      | Go back             |
+| Key | Action |
+|---|---|
+| `↑` `↓` | Move selection |
+| `Enter` | Confirm / Play |
+| `Esc` | Go back |
 
-### Now Playing
+**Now Playing**
 
-| Key     | Action                        |
-|---------|-------------------------------|
-| `Space` | Pause / Resume                |
-| `r`     | Restart current track         |
-| `n`     | Skip to next track in queue   |
-| `a`     | Add current track to playlist |
-| `Esc`   | Back to previous screen       |
+| Key | Action |
+|---|---|
+| `Space` | Pause / Resume |
+| `r` | Restart current track |
+| `n` | Skip to next in queue |
+| `a` | Add to playlist |
+| `Esc` | Back to previous screen |
 
-### Library
+**Library**
 
-| Key     | Action                  |
-|---------|-------------------------|
-| `Enter` | Open playlist / Play    |
-| `c`     | Create new playlist     |
-| `r`     | Remove selected item    |
-| `Esc`   | Go back                 |
+| Key | Action |
+|---|---|
+| `Enter` | Open playlist / Play |
+| `c` | Create new playlist |
+| `r` | Remove selected item |
+| `Esc` | Go back |
 
-### Search
+**Search**
 
-| Key     | Action                        |
-|---------|-------------------------------|
-| `Enter` | Play from selected result     |
-| `a`     | Add to playlist               |
-| `Esc`   | Back to search input / Menu   |
+| Key | Action |
+|---|---|
+| `Enter` | Play from selected result |
+| `a` | Add to playlist |
+| `Esc` | Back to search input / Menu |
 
 ---
 
 ## Tech Stack
 
-- [Ink](https://github.com/vadimdemedes/ink) — React-based terminal UI
-- [yt-search](https://github.com/talmobi/yt-search) — YouTube search
-- [mpv](https://mpv.io/) — Audio playback
-- [yt-dlp](https://github.com/yt-dlp/yt-dlp) — YouTube stream extraction
+[Ink](https://github.com/vadimdemedes/ink) · [yt-search](https://github.com/talmobi/yt-search) · [mpv](https://mpv.io/) · [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 
 ---
 
