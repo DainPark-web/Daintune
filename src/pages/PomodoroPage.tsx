@@ -7,7 +7,7 @@ import { PomodoroState, PomodoroActions } from '../hooks/usePomodoro.js'
 import { Track } from '../types.js'
 import { PlaybackStatus } from '../hooks/usePlayback.js'
 
-const DURATION_OPTIONS = [5, 10, 25, 45, 60]
+const DURATION_OPTIONS = [1,5, 10, 25, 45, 60]
 
 interface Props {
   pomodoroState: PomodoroState

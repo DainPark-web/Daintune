@@ -11,7 +11,7 @@ import { loadPlaylists, savePlaylists, loadSettings, saveSettings } from './stor
 import { usePlayback } from './hooks/usePlayback.js'
 import { usePomodoro } from './hooks/usePomodoro.js'
 import { stopPlayback } from './player.js'
-import { playTune, stopTune } from './tune.js'
+import { playTune, stopTune } from './tune.ts'
 
 const App = () => {
   const [page, setPage] = useState<Page>('menu')
