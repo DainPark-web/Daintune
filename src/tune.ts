@@ -1,6 +1,10 @@
 import { spawn, ChildProcess } from 'child_process'
+import { join, dirname } from 'path' 
+import { fileURLToPath } from 'url'  
 
-const SOUND_FILE = '/System/Library/Sounds/Glass.aiff'
+
+const __dirname = dirname(fileURLToPath(import.meta.url)) 
+const SOUND_FILE = join(__dirname, '..', 'assets', 'alarm.wav') 
 
 let tuneProcess: ChildProcess | null = null
 
