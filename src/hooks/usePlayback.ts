@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Track } from '../types.js'
-import { startPlayback, stopPlayback, pausePlayback, resumePlayback } from '../player.js'
+import { startPlayback, stopPlayback, pausePlayback, resumePlayback, seekPlayback } from '../player.js'
 
 export type PlaybackStatus = 'idle' | 'loading' | 'playing' | 'paused' | 'ended' | 'error'
 
@@ -21,6 +21,7 @@ export interface PlaybackActions {
   resume: () => void
   restart: () => void
   next: () => void
+  seek: (delta: number) => void
 }
 
 const getNextIndex = (current: number, length: number, shuffle: boolean): number => {
@@ -46,6 +47,7 @@ export const usePlayback = (options: {
   const shuffleRef  = useRef(options.shuffle)
   const autoplayRef = useRef(options.autoplayNext)
   const queueRef    = useRef(queue)
+  const progressRef = useRef(progress)
 
   useEffect(() => {
     repeatRef.current   = options.repeat
@@ -54,6 +56,7 @@ export const usePlayback = (options: {
   }, [options.repeat, options.shuffle, options.autoplayNext])
 
   useEffect(() => { queueRef.current = queue }, [queue])
+  useEffect(() => { progressRef.current = progress }, [progress])
 
   const activeTrack = queue.length > 0 ? queue[currentIndex] ?? null : null
   const nextTrack   = queue.length > 1 && !options.shuffle ? queue[(currentIndex + 1) % queue.length] ?? null : null
@@ -121,8 +124,14 @@ export const usePlayback = (options: {
     }
   }
 
+  const seek = (delta: number) => {
+    const target = Math.max(0, progressRef.current + delta)
+    seekPlayback(target)
+    setProgress(target)
+  }
+
   return {
     state: { queue, currentIndex, activeTrack, nextTrack, status, progress, error },
-    actions: { start, stop, pause, resume, restart, next },
+    actions: { start, stop, pause, resume, restart, next, seek },
   }
 }

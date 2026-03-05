@@ -59,6 +59,7 @@ const SearchPage = ({ playlists, onAddToPlaylist, onBack, onPlay, miniPlayer, mi
         artist: item.author.name ?? 'Unknown',
         duration: item.seconds,
         youtubeId: item.videoId,
+        ago: item.ago,
       }))
       setResults(tracks)
       setSelected(0)
@@ -164,6 +165,7 @@ const SearchPage = ({ playlists, onAddToPlaylist, onBack, onPlay, miniPlayer, mi
                   </Text>
                   <Text color="gray">{track.artist}</Text>
                   <Text color="gray">{formatDuration(track.duration)}</Text>
+                  {track.ago && <Text color="gray">{track.ago}</Text>}
                 </Box>
               )
             })}

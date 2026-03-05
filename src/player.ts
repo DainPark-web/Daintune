@@ -108,3 +108,4 @@ const sendCmd = (cmd: unknown[]) => {
 
 export const pausePlayback = () => sendCmd(['set_property', 'pause', true])
 export const resumePlayback = () => sendCmd(['set_property', 'pause', false])
+export const seekPlayback = (seconds: number) => sendCmd(['seek', seconds, 'absolute'])
