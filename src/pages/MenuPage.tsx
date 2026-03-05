@@ -17,6 +17,7 @@ interface Props {
 const MENU_ITEMS: { label: string; icon: string; page: Page | null }[] = [
   { label: 'Search',      icon: '🔍', page: 'search' },
   { label: 'Library',     icon: '📚', page: 'library' },
+  { label: 'History',     icon: '🕓', page: 'history' },
   { label: 'Now Playing', icon: '🎵', page: 'nowPlaying' },
   { label: 'Pomodoro',    icon: '⏱',  page: 'pomodoro' },
   { label: 'Settings',    icon: '⚙️', page: 'settings' },

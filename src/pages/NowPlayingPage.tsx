@@ -60,6 +60,8 @@ const NowPlayingPage = ({
       setAddResult(null)
       setShowPicker(true)
     }
+    if (key.leftArrow)  playbackActions.seek(-10)
+    if (key.rightArrow) playbackActions.seek(10)
   }, { isActive: !showPicker })
 
   useInput((_input, key) => {
@@ -165,8 +167,8 @@ const NowPlayingPage = ({
       <MiniTimer timeLeft={miniTimer.timeLeft} status={miniTimer.status} />
       <Text color="gray">
         {showPicker
-          ? `up/down navigate  Enter add  Esc cancel`
-          : `Space pause/play  r restart  ${queue.length > 1 ? 'n next  ' : ''}a add to playlist  Esc back`}
+          ? `[↑][↓] navigate  [Enter] add  [Esc] cancel`
+          : `[Space] pause/play  [r] restart  [←][→] seek ±10s  ${queue.length > 1 ? '[n] next  ' : ''}[a] add  [Esc] back`}
       </Text>
     </Box>
   )

@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { render } from 'ink'
 import MenuPage from './pages/MenuPage.js'
-import { Page, Track } from './types.js'
+import { Page, Track, HistoryEntry } from './types.js'
 import SearchPage from './pages/SearchPage.js'
 import LibraryPage, { INITIAL_PLAYLISTS, Playlist } from './pages/LibraryPage.js'
 import NowPlayingPage from './pages/NowPlayingPage.js'
 import SettingsPage, { INITIAL_SETTINGS } from './pages/SettingsPage.js'
 import PomodoroPage from './pages/PomodoroPage.js'
-import { loadPlaylists, savePlaylists, loadSettings, saveSettings } from './storage.js'
+import HistoryPage from './pages/HistoryPage.js'
+import { loadPlaylists, savePlaylists, loadSettings, saveSettings, loadHistory, saveHistory } from './storage.js'
 import { usePlayback } from './hooks/usePlayback.js'
 import { usePomodoro } from './hooks/usePomodoro.js'
 import { stopPlayback } from './player.js'
@@ -17,9 +18,11 @@ const App = () => {
   const [page, setPage] = useState<Page>('menu')
   const [settings, setSettings] = useState(loadSettings() ?? INITIAL_SETTINGS)
   const [playlists, setPlaylists] = useState<Playlist[]>(loadPlaylists() ?? INITIAL_PLAYLISTS)
+  const [history, setHistory] = useState<HistoryEntry[]>(loadHistory() ?? [])
 
   useEffect(() => { savePlaylists(playlists) }, [playlists])
   useEffect(() => { saveSettings(settings) }, [settings])
+  useEffect(() => { saveHistory(history) }, [history])
   useEffect(() => () => { stopPlayback(); stopTune() }, [])
 
   // 라이브러리에서 왔을 때 복귀 정보
@@ -32,6 +35,15 @@ const App = () => {
 
   const playback = usePlayback({ repeat, shuffle, autoplayNext })
   const pomodoro = usePomodoro()
+
+  useEffect(() => {
+    const track = playback.state.activeTrack
+    if (!track) return
+    setHistory(prev => [
+      { track, playedAt: Date.now() },
+      ...prev,
+    ].slice(0, 50))
+  }, [playback.state.activeTrack?.youtubeId])
 
   const miniPlayer = {
     activeTrack: playback.state.activeTrack,
@@ -101,6 +113,7 @@ const App = () => {
   if (page === 'nowPlaying') return <NowPlayingPage playbackState={playback.state} playbackActions={playback.actions} repeat={repeat} shuffle={shuffle} autoplayNext={autoplayNext} playlists={playlists} onAddToPlaylist={handleAddToPlaylist} onBack={handleNowPlayingBack} miniTimer={miniTimer} />
   if (page === 'settings')   return <SettingsPage miniPlayer={miniPlayer} miniTimer={miniTimer} settings={settings} onToggle={i => setSettings(prev => prev.map((s, idx) => idx === i ? { ...s, value: !s.value } : s))} onBack={() => setPage('menu')} />
   if (page === 'pomodoro')   return <PomodoroPage pomodoroState={pomodoro.state} pomodoroActions={pomodoro.actions} miniPlayer={miniPlayer} onBack={() => setPage('menu')} />
+  if (page === 'history')    return <HistoryPage history={history} onClear={() => setHistory([])} onPlay={(track) => handlePlay([track], 0)} onBack={() => setPage('menu')} miniPlayer={miniPlayer} miniTimer={miniTimer} />
 
   return <MenuPage miniPlayer={miniPlayer} miniTimer={miniTimer} onNavigate={setPage} />
 }

@@ -1,4 +1,9 @@
-export type Page = 'menu' | 'search' | 'library' | 'nowPlaying' | 'settings' | 'pomodoro'
+export type Page = 'menu' | 'search' | 'library' | 'nowPlaying' | 'settings' | 'pomodoro' | 'history'
+
+export interface HistoryEntry {
+  track: Track
+  playedAt: number
+}
 
 export interface Track {
   title: string
@@ -6,4 +11,5 @@ export interface Track {
   duration: number // seconds
   youtubeId?: string
   lyrics?: string
+  ago?: string
 }
