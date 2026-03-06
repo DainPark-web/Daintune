@@ -6,6 +6,8 @@
 |____/ \__,_|_|_| |_|\__|\__,_|_| |_|\___|
 ```
 
+
+
 ![preview](./assets/p1.png)
 
 > A terminal-based music player. Search, organize, and play music directly from your command line — no browser needed.
