@@ -45,7 +45,7 @@ sudo chmod a+rx /usr/local/bin/yt-dlp
 Clone and link locally:
 
 ```bash
-git clone https://github.com/dain-p/Daintune.git
+git clone https://github.com/DainPark-web/Daintune.git
 cd Daintune
 npm install
 npm run build
